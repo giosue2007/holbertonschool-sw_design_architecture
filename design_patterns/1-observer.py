@@ -28,7 +28,7 @@ class NewsSubject:
 
     def notify(self, topic: str, data: str) -> None:
         """Notifies all interested observers about an event."""
-        # Snapshot iteration (list(self._observers.items())) handles safe modification
+        # Snapshot iteration (list(...)) handles safe modification
         for obs, topics in list(self._observers.items()):
             if topics is None or topic in topics:
                 obs.update(topic, data)
@@ -79,4 +79,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
- 
