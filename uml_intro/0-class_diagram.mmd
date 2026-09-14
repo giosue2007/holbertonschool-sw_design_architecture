@@ -1,0 +1,24 @@
+classDiagram
+    class User {
+        +str username
+        +str email
+        +bool is_active
+        +login() bool
+        +logout() None
+    }
+
+    class Course {
+        +str title
+        +str description
+        +list lessons
+        +add_lesson(lesson) None
+    }
+
+    class Lesson {
+        +str title
+        +str content
+        +int duration
+    }
+
+    User "1" -- "*" Course : enrolls_in
+    Course "1" *-- "*" Lesson : contains
