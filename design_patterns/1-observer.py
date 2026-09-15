@@ -3,6 +3,7 @@
 Observer pattern implementation with topic filtering.
 """
 from abc import ABC, abstractmethod
+from typing import Optional, Set, Dict
 
 
 class Observer(ABC):
@@ -18,9 +19,11 @@ class NewsSubject:
     """Subject that manages subscribers and notifies them of events."""
 
     def __init__(self) -> None:
-        self._observers: dict[Observer, set[str] | None] = {}
+        self._observers: Dict[Observer, Optional[Set[str]]] = {}
 
-    def subscribe(self, observer: Observer, topics: set[str] | None = None) -> None:
+    def subscribe(
+        self, observer: Observer, topics: Optional[Set[str]] = None
+    ) -> None:
         """Subscribe an observer, optionally filtering by specific topics."""
         self._observers[observer] = topics
 
@@ -30,7 +33,6 @@ class NewsSubject:
 
     def notify(self, topic: str, data: str) -> None:
         """Notify registered observers if they subscribed to the topic."""
-        # Copie sous forme de liste pour gérer les désabonnements pendant la diffusion
         for observer, topics in list(self._observers.items()):
             if topics is None or topic in topics:
                 observer.update(topic, data)
@@ -65,14 +67,10 @@ def main() -> None:
     email_obs = EmailObserver()
     sms_obs = SmsObserver()
 
-    # LogObserver s'abonne uniquement à sports et breaking
     subject.subscribe(log_obs, topics={"sports", "breaking"})
-    # EmailObserver s'abonne à tous les sujets (topics=None)
     subject.subscribe(email_obs)
-    # SmsObserver s'abonne uniquement à breaking
     subject.subscribe(sms_obs, topics={"breaking"})
 
-    # Diffusion des événements
     subject.notify("weather", "rain")
     subject.notify("sports", "goal")
     subject.notify("breaking", "alert")
